@@ -19,6 +19,21 @@ function switch_toggle(sheet){
   return sheet.getRange('J1').getValue();
 }
 
+// Returns 'true' if variable d is a date object.
+function isValidDate(d) {
+  if ( Object.prototype.toString.call(d) !== "[object Date]" )
+    return false;
+  return !isNaN(d.getTime());
+}
+
+// Test if value is a date and if so format
+// otherwise, reflect input variable back as-is. 
+function isDate(sDate) {
+  if (isValidDate(sDate)) {
+    sDate = Utilities.formatDate(new Date(sDate), "GMT+5:45", "MM/dd/yyyy");
+  }
+  return sDate.toString();
+}
 
 /*
  ____________________________________
@@ -74,8 +89,8 @@ function extractThroughput(){
     check validation
     */
     if(data[i][14] == 'No'){
-      Logger.log('Validation : ' + data[i][14]);
-      ss.toast('Validation : ' + data[i][14]);
+      Logger.log(data[i][0] + ' : ' + 'Validation : ' + data[i][14]);
+      ss.toast(data[i][0] + ' : ' + 'Validation : ' + data[i][14]);
       continue;
     }
     
@@ -153,6 +168,7 @@ function extractThroughput(){
     */
     var teamCaptain = wsSetting.getRange("E3:E"+(wsSetting.getLastRow())).getValues();
     var sourceData = sourceSheet.getRange("A2:G"+(sourceSheet.getLastRow())).getValues();
+    Logger.log("Source Data : ");
     Logger.log(sourceData[sourceData.length-1]);
     
     var arr = [];
@@ -172,6 +188,11 @@ function extractThroughput(){
       
       Logger.log(sourceSS.getName() + " : " + sourceData[j][0]);
       try{
+        if(parseFloat(Utilities.formatDate(sourceData[j][0], "GMT+5:45", "MM/dd/yyyy").split('/')[0]) != new Date().getMonth() + 1){
+          Logger.log("Month condition checking : " + Utilities.formatDate(sourceData[j][0], "GMT+5:45", "MM/dd/yyyy").split('/')[0]);
+          ss.toast("Month condition checking : " + Utilities.formatDate(sourceData[j][0], "GMT+5:45", "MM/dd/yyyy").split('/')[0]);
+          continue;
+        }
         var sourceDate = Utilities.formatDate(sourceData[j][0], "GMT+5:45", "MM/dd/yyyy");
       }catch(e){
         Logger.log("Date Exception : " + e);

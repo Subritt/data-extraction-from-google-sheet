@@ -131,9 +131,13 @@ function totalSum(arr, throughputSheet, data){
     var task = 0;
     var duration = 0;
     for(var j = 0 ; j < data.length ; j++){
+      if(data[j][0] == ""){
+        continue;
+      }
       if(data[j][1] == arr[i][0] && data[j][2] == arr[i][1] && data[j][3] == arr[i][2]){
-        task += data[j][4];
-        duration += data[j][5];
+        Logger.log(data[j][1] + " ||| " + data[j][2] + " ||| " + data[j][3] + " ||| " + Number(data[j][4]));
+        task += Number(data[j][4]);
+        duration += Number(data[j][5]);
       }
     }
     arr[i].push(task);
